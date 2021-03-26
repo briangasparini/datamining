@@ -1,8 +1,9 @@
+#%%
 from Labelling import *
 from DataAnalyse import *
 from DataCollection import *
 from Constante import *
-
+from DataVisualization import *
 
 def initRepository(repositoryPath):
     if repositoryPath[-1] == "/":
@@ -35,19 +36,42 @@ def createJsonFile(jsonData,FileName):
 #createJsonFile(addMainColorToJson(DATA_PATH+"DataCouleur.json"),"DataCouleur")
 """ Data Analyses """
 # Tableau de Data (User Like / Color / TAG / Orientation / Taille)
-allData = []
+#allData = []
 allData = getData(0,DATA_PATH+"DataTAG.json")
-print("Tableau Données User")
-print(allData[0])
-print("Tableau Couleurs")
-print(allData[1])
-print("Tableau Tag")
-print(allData[2])
-print("Tableau Orientation")
-print(allData[3])
-print("Tableau Taille")
-print(allData[4])
+#print("Tableau Données User")
+#print(allData[0])
+#print("Tableau Couleurs")
+#print(allData[1])
+#print("Tableau Tag")
+#print(allData[2])
+#print("Tableau Orientation")
+#print(allData[3])
+#print("Tableau Taille")
+#print(allData[4])
 """ Data Visualization """
 
+dicChiffreOrientation = getDataOrientation(allData[3])
+plot.figure(figsize=(9,3))
+plot.suptitle('Nombre d\' images par orientation')
+plot.bar(["PAYSAGE","PORTRAIT","CAREE"], [dicChiffreOrientation["PAYSAGE"],dicChiffreOrientation["PORTRAIT"],dicChiffreOrientation["CARRE"]])
+with open(DATA_PATH+"Data.json", "r") as read_file:
+    nX = 0
+    nY = 0
+    y = []
+    nindice = 0
+    data = json.load(read_file)
+    figure, axes = plot.subplots(nrows=10, ncols=5, figsize=(50,50))
+    for datajson in data:
+        nindice += 1
+        if nX == 10:
+            nY += 1
+            nX = 1
+        y =  getHistogram(datajson["filePath"])
+        axes[nX][nY] = plot.subplot(10,5,nindice)
+        axes[nX][nY].set_prop_cycle('color', ['red', 'green', 'blue'])
+        plot.plot(range(255),y)
+        nX += 1
+    plot.show()
 
 
+# %%
