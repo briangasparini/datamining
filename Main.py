@@ -4,7 +4,11 @@ from DataAnalyse import *
 from DataCollection import *
 from Constante import *
 from DataVisualization import *
-
+from PIL import Image
+import numpy
+import math
+import matplotlib.pyplot as plot
+from sklearn.cluster import KMeans
 def initRepository(repositoryPath):
     if repositoryPath[-1] == "/":
         repositoryPath = repositoryPath[0:len(repositoryPath)-1]
@@ -36,18 +40,8 @@ def createJsonFile(jsonData,FileName):
 #createJsonFile(addMainColorToJson(DATA_PATH+"DataCouleur.json"),"DataCouleur")
 """ Data Analyses """
 # Tableau de Data (User Like / Color / TAG / Orientation / Taille)
-#allData = []
 allData = getData(0,DATA_PATH+"DataTAG.json")
-#print("Tableau Données User")
-#print(allData[0])
-#print("Tableau Couleurs")
-#print(allData[1])
-#print("Tableau Tag")
-#print(allData[2])
-#print("Tableau Orientation")
-#print(allData[3])
-#print("Tableau Taille")
-#print(allData[4])
+createJsonFile(allData[0],"User")
 """ Data Visualization """
 
 dicChiffreOrientation = getDataOrientation(allData[3])
@@ -72,6 +66,5 @@ with open(DATA_PATH+"Data.json", "r") as read_file:
         plot.plot(range(255),y)
         nX += 1
     plot.show()
-
 
 # %%
