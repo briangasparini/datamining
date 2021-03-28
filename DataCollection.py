@@ -33,9 +33,9 @@ def getExifData (imagePath):
                 elif type(val) is int or type(val) is str or type(val) is float:
                     exifProperty[ExifTags.TAGS[key]] = val
         return exifProperty
-def initData():
+def initData(RequestURL):
     # Execute Request
-    response = urllib.request.urlopen(URL_DATA)
+    response = urllib.request.urlopen(RequestURL)
     jsonData =  json.loads(response.read().decode('utf-8'))
     return jsonData
 def checkData(imagePath,imageExt,imageName,newImagePath):
@@ -60,12 +60,13 @@ def getDataJsonFile(urlPath,newImagePath,imageName,imageExt,imageID):
     jsonData["fileExtension"] = imageExt
     jsonData["exifProperty"] = getExifData(newImagePath) 
     return jsonData
-def dataCollection():
+
+def dataCollection(RequestURL,ImagePathDestination = IMAGE_CHECKED):
     jsonToCreate = False
     imageID = 0
     jsonDataFile = []
     # initData with WikiData
-    jsonDataDirty = initData()
+    jsonDataDirty = initData(RequestURL)
     for data in jsonDataDirty['results']['bindings']:
         imagePath = data['pic']['value']
         urlPath = imagePath
@@ -75,7 +76,7 @@ def dataCollection():
         # CheckData
         if checkData(urlPath,imageExt,imageName,newImagePath):
             os.remove(newImagePath)
-            newImagePath = IMAGE_CHECKED+imageName+imageExt
+            newImagePath = ImagePathDestination+imageName+imageExt
             # Download
             if saveImage(urlPath,newImagePath):
                 jsonDataFile.append(getDataJsonFile(urlPath,newImagePath,imageName,imageExt,imageID))
